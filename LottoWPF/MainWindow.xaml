@@ -1,0 +1,42 @@
+﻿<Window x:Class="LottoWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LottoWPF"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="MainWindow" Height="400" Width="700">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black" Offset="1"/>
+                <GradientStop Color="#FFB3AFFF" Offset="0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width ="*"/>
+            <ColumnDefinition Width ="*"/>
+            <ColumnDefinition Width ="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height ="*"/>
+            <RowDefinition Height ="*"/>
+            <RowDefinition Height ="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Name="DayCounter" Grid.Column="0" Width="80" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" Background="White" />
+        <TextBlock Name="AccBalance" Grid.Column="2" Width="150" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Background="White"/>
+        <TextBlock Name="Welcome" Grid.Column="1" Height="30" VerticalAlignment="Center" Background="White" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
+        <TextBlock Name="Information" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="White" TextAlignment="Center"/>
+        <TextBlock Name="Coupons" Grid.Column="1" Grid.Row="1" Height="100" VerticalAlignment="Center" Background="White"/>
+
+        <Button Click="Bet" Name="Button1" Content="Obstaw liczby" Grid.Column="0" Grid.Row="2" Width="170" Height="50"/>
+        <Button Click="" Name="Button2" Content="Losowanie" Grid.Column="1" Grid.Row="2" Width="170" Height="50"/>
+        <Button Name="Button3" Content="Zakończ grę" Grid.Column="2" Grid.Row="2" Width="170" Height="50"/>
+
+
+    </Grid>
+
+</Window>
