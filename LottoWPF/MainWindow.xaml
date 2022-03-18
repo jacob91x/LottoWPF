@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:LottoWPF"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="MainWindow" Height="400" Width="700">
+        Title="Gra Lotto" Height="400" Width="700"
+        WindowStartupLocation="CenterScreen">
+
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -14,29 +16,25 @@
                 <GradientStop Color="#FFB3AFFF" Offset="0"/>
             </LinearGradientBrush>
         </Grid.Background>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width ="*"/>
-            <ColumnDefinition Width ="*"/>
             <ColumnDefinition Width ="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height ="*"/>
-            <RowDefinition Height ="*"/>
-            <RowDefinition Height ="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Name="DayCounter" Grid.Column="0" Width="80" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" Background="White" />
-        <TextBlock Name="AccBalance" Grid.Column="2" Width="150" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Background="White"/>
-        <TextBlock Name="Welcome" Grid.Column="1" Height="30" VerticalAlignment="Center" Background="White" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
-        <TextBlock Name="Information" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="White" TextAlignment="Center"/>
-        <TextBlock Name="Coupons" Grid.Column="1" Grid.Row="1" Height="100" VerticalAlignment="Center" Background="White"/>
-
-        <Button Click="Bet" Name="Button1" Content="Obstaw liczby" Grid.Column="0" Grid.Row="2" Width="170" Height="50"/>
-        <Button Click="" Name="Button2" Content="Losowanie" Grid.Column="1" Grid.Row="2" Width="170" Height="50"/>
-        <Button Name="Button3" Content="Zakończ grę" Grid.Column="2" Grid.Row="2" Width="170" Height="50"/>
-
-
+        <TextBlock Name="DayCounterTextBlock" Width="130" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" Background="White" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock Name="AccountBalanceTextBlock"  Width="150" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Background="White" FontWeight="Bold" TextAlignment="Center"/>
+        <TextBlock Name="WelcomeTextBlock" Height="30" Width="320" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" Background="White" FontWeight="Bold" FontStyle="Normal" TextAlignment="Center" LineHeight="12"/>
+        <TextBlock Name="InformationTextBlock"  Height="30" Width="320" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Background="White" TextAlignment="Left" FontWeight="Bold"/>
+        <TextBlock Name="CouponListTextBlock" Width="320" Margin="135" TextAlignment="Left" FontWeight="Bold" Background="White"/>
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
+            <Button Name="BetButton" Click="BetButtonClick"  Content="Obstaw liczby" Grid.Column="0" Grid.Row="2" Width="170" Height="50" Margin="20" FontWeight="Bold"/>
+            <Button Name="DrawButton" Click="DrawButtonClick" Content="Losowanie" Grid.Column="1" Grid.Row="2" Width="170" Height="50" Margin="20" FontWeight="Bold"/>
+            <Button Name="CloseAppButton" Click="CloseAppButtonClick" Content="Zakończ grę" Grid.Column="2" Grid.Row="2" Width="170" Height="50" Margin="20" FontWeight="Bold"/>
+        </StackPanel>
     </Grid>
-
 </Window>

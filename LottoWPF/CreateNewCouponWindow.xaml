@@ -1,0 +1,33 @@
+﻿<Window x:Class="LottoWPF.CreateNewCouponWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="CreateNewCouponWindow" Height="240" Width="340"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black" Offset="1"/>
+                <GradientStop Color="#FFB3AFFF" Offset="0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Label Content="Twoje liczby:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,130,150" FontWeight="Bold"/>
+        <TextBlock Name="CurrentCouponTextBlock" Width="210" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,100" Background="White" FontWeight="Bold"/>
+        <Button Click="BackspaceButtonClick"  Content="Usuń" Width="40" Height="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="260,0,0,100"/>
+        <TextBlock Name="AddedNumberInformationTextBlock" Width="210" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,50" Background="{x:Null}"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
+            <TextBox Name="NewNumberForCouponTextBox" Width="40" Height="20" Margin="10"/>
+            <Button Name="AddNumberButton" Click="AddNumberButtonClick" Content="Dodaj" Width="40" Height="20" FontWeight="Bold" Margin="10"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,110,0,0">
+            <Button Name="AcceptCouponButton" Click="AcceptCouponButtonClick"  Content="Zatwierdź" Width="70" Height="30" FontWeight="Bold" Margin="0,0,20,0"/>
+            <Button Click="CancelButtonClick"  Content="Anuluj" Width="70" Height="30" FontWeight="Bold" Margin="20,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
