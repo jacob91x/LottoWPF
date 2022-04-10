@@ -29,7 +29,13 @@
         <TextBlock Name="AccountBalanceTextBlock"  Width="150" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Background="White" FontWeight="Bold" TextAlignment="Center"/>
         <TextBlock Name="WelcomeTextBlock" Height="30" Width="320" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" Background="White" FontWeight="Bold" FontStyle="Normal" TextAlignment="Center" LineHeight="12"/>
         <TextBlock Name="InformationTextBlock"  Height="30" Width="320" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0" Background="White" TextAlignment="Left" FontWeight="Bold"/>
-        <TextBlock Name="CouponListTextBlock" Width="320" Margin="135" TextAlignment="Left" FontWeight="Bold" Background="White"/>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Width="320" Margin="135">
+            <ScrollViewer.Background>
+                <SolidColorBrush Color="White" Opacity="0.5"/>
+            </ScrollViewer.Background>
+            <TextBlock Name="CouponListTextBlock" Width="320" TextAlignment="Left" FontWeight="Bold"/>
+        </ScrollViewer>
         
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
             <Button Name="BetButton" Click="BetButtonClick"  Content="Obstaw liczby" Grid.Column="0" Grid.Row="2" Width="170" Height="50" Margin="20" FontWeight="Bold"/>

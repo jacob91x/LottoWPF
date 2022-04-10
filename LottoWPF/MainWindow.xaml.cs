@@ -10,16 +10,11 @@ namespace LottoWPF
     public partial class MainWindow : Window
     {
         private int _drawCounter = 0;
-
-        public int accountBalance = 30;
-
-        private string _couponXD;
-
+        private int _accountBalance = 30;
         private int _couponCounter;
-
+        private int _currentCumulationValue;
         private LottoEngine _lottoEngine = new LottoEngine();
-
-        public List<List<int>> listOfCoupons { get; set; } = new List<List<int>>();
+        private List<Coupon> _listOfCoupons = new List<Coupon>();
 
         public MainWindow()
         {
@@ -27,18 +22,24 @@ namespace LottoWPF
             InitializedData();
         }
 
-
         ///Metody
         private void InitializedData()
         {
+            CurrentCumulation();
             UpdateWelcomeTextBlock();
             UpdateDayCounterTextBlock();
             UpdateAccountBalanceTextBlock();
             UpdateInformationTextBlock();
         }
+
+        private void CurrentCumulation()
+        {
+            _currentCumulationValue = _lottoEngine.CalculateCumulation();
+        }
+
         private void UpdateWelcomeTextBlock()
         {
-            WelcomeTextBlock.Text = "Witaj w grze Lotto, dziś do wygrania jest " + _lottoEngine.CalculateCumulation() + " zł!";
+            WelcomeTextBlock.Text = "Witaj w grze Lotto, dziś do wygrania jest " + _currentCumulationValue + " zł!";
         }
 
         private void UpdateDayCounterTextBlock()
@@ -48,18 +49,29 @@ namespace LottoWPF
 
         public void UpdateAccountBalanceTextBlock()
         {
-            AccountBalanceTextBlock.Text = "Stan konta: " + accountBalance + " zł";
+            AccountBalanceTextBlock.Text = "Stan konta: " + _accountBalance + " zł";
         }
 
         private void DrawButtonClick(object sender, RoutedEventArgs e)
         {
             _drawCounter++;
+            _couponCounter = 0;
             UpdateDayCounterTextBlock();
+            UpdateInformationTextBlock();
+            LuckyNumbersPresentationWindow luckyNumbersPresentationWindow = new LuckyNumbersPresentationWindow(_currentCumulationValue, _listOfCoupons, _lottoEngine.DrawLuckyNumbers());
+            this.Visibility = Visibility.Hidden;
+            luckyNumbersPresentationWindow.Closed += LuckyNumbersPresentationWindow_Closed;
+            luckyNumbersPresentationWindow.Show();
         }
 
         private void BetButtonClick(object sender, RoutedEventArgs e)
         {
-            if (accountBalance >= 3)
+            if (_couponCounter >= 8)
+            {
+                MessageBox.Show("Nie możesz obstawić więcej niż 8 kuponów", "Gra Lotto", MessageBoxButton.OK);
+                return;
+            }
+            if (_accountBalance >= 3)
             {
                 CreateNewCouponWindow createNewCouponWindow = new CreateNewCouponWindow();
                 this.Visibility = Visibility.Hidden;
@@ -73,7 +85,7 @@ namespace LottoWPF
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        accountBalance += 30;
+                        _accountBalance += 30;
                         UpdateAccountBalanceTextBlock();
                         break;
                     case MessageBoxResult.No:
@@ -82,39 +94,45 @@ namespace LottoWPF
             }
         }
 
+        private void LuckyNumbersPresentationWindow_Closed(object sender, System.EventArgs e)
+        {
+            var senderInfo = (LuckyNumbersPresentationWindow)sender;
+            _accountBalance += senderInfo.totalWinValue;
+            UpdateAccountBalanceTextBlock();
+            _listOfCoupons.Clear();
+            UpdateCouponsTextBlock();
+        }
+
         private void CreateNewCouponWindow_Closed(object sender, System.EventArgs e)
         {
             var senderInfo = (CreateNewCouponWindow)sender;
 
-            if (senderInfo.acceptCouponButtonClickInfo == true)
+            if (senderInfo.AcceptCouponButtonClickInfo == true)
             {
-                int i = 0;
-                listOfCoupons.Add(senderInfo.listOfNumbersForCoupon);
-                foreach (var item in senderInfo.listOfNumbersForCoupon)
-                {
-                    _couponXD += item;
-                    if (i < senderInfo.listOfNumbersForCoupon.Count - 1)
-                    {
-                        i++;
-                        _couponXD += ", ";
-                    }
-                }
+                _listOfCoupons.Add(senderInfo.Coupon);
                 UpdateCouponsTextBlock();
                 _couponCounter++;
                 UpdateInformationTextBlock();
-                accountBalance -= 3;
+                _accountBalance -= 3;
                 UpdateAccountBalanceTextBlock();
             }
         }
 
         private void UpdateCouponsTextBlock()
         {
-            CouponListTextBlock.Text = _couponXD;
+            var listOfStringCoupons = new List<string>();
+
+            foreach (var coupon in _listOfCoupons)
+            {
+                listOfStringCoupons.Add(string.Join(", ", coupon));
+            }
+            CouponListTextBlock.Text = string.Join("\n ", listOfStringCoupons);
         }
+
 
         private void UpdateInformationTextBlock()
         {
-            InformationTextBlock.Text = $"Twoje kupony [{_couponCounter}/8]:";
+            InformationTextBlock.Text = $" Twoje kupony [{_couponCounter}/8]:";
         }
 
         private void CloseAppButtonClick(object sender, RoutedEventArgs e)

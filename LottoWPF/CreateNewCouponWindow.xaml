@@ -4,8 +4,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="CreateNewCouponWindow" Height="240" Width="340"
-        WindowStartupLocation="CenterScreen">
+        ResizeMode="NoResize"
+        Title="Gra Lotto" Height="240" Width="340"
+        WindowStartupLocation="CenterScreen"
+        Closed="Window_Closed">
     
     <Grid>
         <Grid.Background>
@@ -21,7 +23,7 @@
         <TextBlock Name="AddedNumberInformationTextBlock" Width="210" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,50" Background="{x:Null}"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0">
-            <TextBox Name="NewNumberForCouponTextBox" Width="40" Height="20" Margin="10"/>
+            <TextBox Name="NewNumberForCouponTextBox" KeyDown="OnEnterKeyDownHandler" Width="40" Height="20" Margin="10"/>
             <Button Name="AddNumberButton" Click="AddNumberButtonClick" Content="Dodaj" Width="40" Height="20" FontWeight="Bold" Margin="10"/>
         </StackPanel>
 

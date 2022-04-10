@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
@@ -11,9 +10,9 @@ namespace LottoWPF
     /// </summary>
     public partial class CreateNewCouponWindow : Window
     {
-        public List<int> listOfNumbersForCoupon = new List<int>();
+        public Coupon Coupon { get; set; } = new Coupon();
 
-        public bool acceptCouponButtonClickInfo = false;
+        public bool AcceptCouponButtonClickInfo { get; set; } = false;
 
         private static Timer _informationTimer;
 
@@ -22,50 +21,62 @@ namespace LottoWPF
         public CreateNewCouponWindow()
         {
             InitializeComponent();
-            UpdateInsertedDataInformationTextBlock(true);
+            UpdateInsertedDataInformationTextBlock(false);
+            EnableAcceptCouponButton(false);
+            FocusNewNumberForCouponTextBox();
         }
 
         private void AddNumberButtonClick(object sender, RoutedEventArgs e)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(NewNumberForCouponTextBox.Text, "[^0-9]"))
+            AddNumberToCoupon();
+        }
+
+        private void AddNumberToCoupon()
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(NewNumberForCouponTextBox.Text, "[^0-9]") || string.IsNullOrEmpty(NewNumberForCouponTextBox.Text))
             {
                 MessageBox.Show("Wprowadź liczbę!");
                 ClearNewNumberForCouponTextBox();
-            }
-            else if (listOfNumbersForCoupon.Contains(int.Parse(NewNumberForCouponTextBox.Text)))
-            {
-                MessageBox.Show("Nie możesz skreślić ponownie tej samej liczby!");
-                ClearNewNumberForCouponTextBox();
-            }
-            else if (AddedNumberValidation())
-            {
-                listOfNumbersForCoupon.Add(int.Parse(NewNumberForCouponTextBox.Text));
-                UpdateCurrentCouponTextBlock();
-                UpdateInsertedDataInformationTextBlock(true);
-            }
-            else
-            {
-                myTimer();
-                UpdateInsertedDataInformationTextBlock(false);
+                return;
             }
 
-            if (listOfNumbersForCoupon.Count >= 6)
+            switch (Coupon.Add(int.Parse(NewNumberForCouponTextBox.Text)))
+            {
+                case CouponError.NoError:
+                    UpdateCurrentCouponTextBlock();
+                    UpdateInsertedDataInformationTextBlock(false);
+                    break;
+                case CouponError.NumberAlreadyExist:
+                    MessageBox.Show("Nie możesz skreślić ponownie tej samej liczby!");
+                    break;
+                case CouponError.NumberOutOfRange:
+                    StartMessageHideTimer();
+                    UpdateInsertedDataInformationTextBlock(true);
+                    break;
+            }
+            if (Coupon.Count >= 6)
             {
                 EnableInsertingOfNumbers(false);
                 EnableAcceptCouponButton(true);
             }
-            NewNumberForCouponTextBox.Text = string.Empty;
+            ClearNewNumberForCouponTextBox();
+            FocusNewNumberForCouponTextBox();
         }
 
-        private void EnableInsertingOfNumbers(bool _enable)
+        private void FocusNewNumberForCouponTextBox()
         {
-            NewNumberForCouponTextBox.IsEnabled = _enable;
-            AddNumberButton.IsEnabled = _enable;
+            NewNumberForCouponTextBox.Focus();
         }
 
-        private void EnableAcceptCouponButton(bool _enable)
+        private void EnableInsertingOfNumbers(bool enable)
         {
-            AcceptCouponButton.IsEnabled = _enable;
+            NewNumberForCouponTextBox.IsEnabled = enable;
+            AddNumberButton.IsEnabled = enable;
+        }
+
+        private void EnableAcceptCouponButton(bool enable)
+        {
+            AcceptCouponButton.IsEnabled = enable;
         }
 
         private void ClearNewNumberForCouponTextBox()
@@ -87,13 +98,12 @@ namespace LottoWPF
                 _currentTime--;
                 timerStatus = false;
             }
-            //dispatcher - property of window, wywołanie, funkcja lambda - definiowana lokalnie
             Dispatcher.Invoke(() => UpdateInsertedDataInformationTextBlock(timerStatus));
         }
 
-        private void myTimer()
+        private void StartMessageHideTimer()
         {
-            _currentTime = 4;
+            _currentTime = 3;
             _informationTimer = new Timer();
             _informationTimer.Interval = 1000;
             _informationTimer.Elapsed += OnTimeEvent;
@@ -101,29 +111,14 @@ namespace LottoWPF
             _informationTimer.Start();
         }
 
-        private bool AddedNumberValidation()
-        {
-            int validatedNumber = int.Parse(NewNumberForCouponTextBox.Text);
-
-            if (validatedNumber > 0 && validatedNumber <= 20)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         private void UpdateCurrentCouponTextBlock()
         {
-            var currentCopuonString = string.Join(", ", listOfNumbersForCoupon);
-            CurrentCouponTextBlock.Text = currentCopuonString;
+            CurrentCouponTextBlock.Text = Coupon.ToString();
         }
 
-        public void UpdateInsertedDataInformationTextBlock(bool informationType)
+        public void UpdateInsertedDataInformationTextBlock(bool isErrorMessage)
         {
-            if (informationType)
+            if (!isErrorMessage)
             {
                 AddedNumberInformationTextBlock.Foreground = new SolidColorBrush(Colors.Black);
                 AddedNumberInformationTextBlock.Text = "Podaj liczbę z zakresu od 1 do 20";
@@ -133,12 +128,11 @@ namespace LottoWPF
                 AddedNumberInformationTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 AddedNumberInformationTextBlock.Text = "Liczba spoza zakresu! " + _currentTime;
             }
-
         }
 
         public void AcceptCouponButtonClick(object sender, RoutedEventArgs e)
         {
-            acceptCouponButtonClickInfo = true;
+            AcceptCouponButtonClickInfo = true;
             CloseCurrentWindow();
         }
 
@@ -155,10 +149,23 @@ namespace LottoWPF
 
         private void BackspaceButtonClick(object sender, RoutedEventArgs e)
         {
-            listOfNumbersForCoupon.RemoveAt(listOfNumbersForCoupon.Count - 1);
+            Coupon.RemoveLast();
             EnableInsertingOfNumbers(true);
             EnableAcceptCouponButton(false);
             UpdateCurrentCouponTextBlock();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            CloseCurrentWindow();
+        }
+
+        private void OnEnterKeyDownHandler(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                AddNumberToCoupon();
+            }
         }
     }
 }
